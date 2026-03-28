@@ -3,672 +3,424 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rakesh Sharma — Portfolio</title>
-<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<title>Rakesh Sharma — Developer Portfolio</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<!-- Icons -->
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+<!-- AOS -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
 <style>
-  :root {
-    --bg: #0a0a0a;
-    --surface: #111111;
-    --card: #161616;
-    --accent: #ff3b00;
-    --accent2: #ffcc00;
-    --accent3: #00e5ff;
-    --text: #f0ede8;
-    --muted: #777;
-    --border: #222;
-  }
+:root {
+  --bg: #050505;
+  --surface: #0e0e0e;
+  --card: #111;
+  --accent: #ff2d00;
+  --accent2: #ffd700;
+  --accent3: #00f0ff;
+  --text: #f5f0ea;
+  --muted: #555;
+  --border: #1c1c1c;
+}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
-  html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Syne', sans-serif;
-    overflow-x: hidden;
-    cursor: none;
-  }
+/* ── CURSOR ── */
+#cur, #cur-ring {
+  position: fixed; pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%); border-radius: 50%;
+}
+#cur { width:10px; height:10px; background:var(--accent); mix-blend-mode:difference; transition: transform .15s; }
+#cur-ring { width:36px; height:36px; border:1.5px solid var(--accent); mix-blend-mode:difference; transition: all .12s ease; }
 
-  /* Custom Cursor */
-  #cursor {
-    position: fixed;
-    width: 14px; height: 14px;
-    background: var(--accent);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
-    mix-blend-mode: difference;
-  }
-  #cursor-ring {
-    position: fixed;
-    width: 40px; height: 40px;
-    border: 2px solid var(--accent);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9998;
-    transform: translate(-50%, -50%);
-    transition: all 0.15s ease;
-    mix-blend-mode: difference;
-  }
-  body:hover #cursor { opacity: 1; }
+/* ── CANVAS ── */
+#hero-canvas { position:absolute; inset:0; z-index:0; opacity:.5; }
 
-  /* Noise Texture */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.5;
-  }
+/* ── LOADER ── */
+#loader {
+  position:fixed; inset:0; z-index:9000;
+  background:var(--bg);
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column; gap:1.5rem;
+  transition: opacity .6s ease;
+}
+.loader-text {
+  font-family:'Bebas Neue',sans-serif; font-size:5rem; letter-spacing:8px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  animation:shimmer 1.5s linear infinite; background-size:200%;
+}
+@keyframes shimmer { to { background-position:-200% center; } }
+.loader-bar-wrap { width:200px; height:2px; background:var(--border); }
+.loader-bar { height:100%; background:var(--accent); width:0; animation:loadbar 1.8s ease forwards; }
+@keyframes loadbar { to { width:100%; } }
 
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem 4rem;
-    background: rgba(10,10,10,0.85);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2rem;
-    letter-spacing: 4px;
-    color: var(--text);
-  }
-  .nav-logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 2.5rem; align-items: center; }
-  .nav-links a {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--accent); }
-  .hire-btn-nav {
-    background: var(--accent) !important;
-    color: #fff !important;
-    padding: 0.55rem 1.4rem;
-    border-radius: 2px;
-    font-weight: 700 !important;
-    transition: background 0.2s, transform 0.2s !important;
-  }
-  .hire-btn-nav:hover { background: #cc2e00 !important; transform: scale(1.04) !important; }
+/* ── NAV ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:1.4rem 5rem;
+  background:rgba(5,5,5,0.85); backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo { font-family:'Bebas Neue',sans-serif; font-size:1.8rem; letter-spacing:5px; }
+.nav-logo span { color:var(--accent); }
+.nav-links { display:flex; gap:2.5rem; align-items:center; }
+.nav-links a {
+  font-family:'JetBrains Mono',monospace; font-size:.72rem;
+  letter-spacing:2px; text-transform:uppercase;
+  color:var(--muted); text-decoration:none; transition:color .2s;
+  position:relative;
+}
+.nav-links a::after {
+  content:''; position:absolute; bottom:-4px; left:0;
+  width:0; height:1px; background:var(--accent); transition:width .25s;
+}
+.nav-links a:hover { color:var(--text); }
+.nav-links a:hover::after { width:100%; }
+.nav-hire {
+  background:var(--accent) !important; color:#fff !important;
+  padding:.5rem 1.4rem !important; border-radius:2px;
+  font-weight:700 !important;
+}
+.nav-hire::after { display:none !important; }
+.nav-hire:hover { background:#cc2200 !important; color:#fff !important; }
 
-  /* HERO */
-  .hero {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    padding: 10rem 4rem 6rem;
-    overflow: hidden;
-  }
-  .hero-bg-number {
-    position: absolute;
-    right: -2rem;
-    top: 50%;
-    transform: translateY(-50%);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(16rem, 30vw, 28rem);
-    color: rgba(255,255,255,0.025);
-    pointer-events: none;
-    user-select: none;
-    line-height: 1;
-  }
-  .hero-tag {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  .hero-tag::before {
-    content: '';
-    display: inline-block;
-    width: 40px;
-    height: 2px;
-    background: var(--accent);
-  }
-  .hero h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(5rem, 14vw, 12rem);
-    line-height: 0.9;
-    letter-spacing: -2px;
-    margin-bottom: 2rem;
-    position: relative;
-    z-index: 1;
-  }
-  .hero h1 .line { display: block; overflow: hidden; }
-  .hero h1 .stroke {
-    -webkit-text-stroke: 2px var(--text);
-    color: transparent;
-  }
-  .hero h1 .highlight { color: var(--accent); }
-  .hero-sub {
-    max-width: 480px;
-    font-size: 1.1rem;
-    color: var(--muted);
-    line-height: 1.7;
-    margin-bottom: 3rem;
-    position: relative;
-    z-index: 1;
-  }
-  .hero-actions { display: flex; gap: 1.2rem; flex-wrap: wrap; position: relative; z-index: 1; }
+/* ── HERO ── */
+.hero {
+  position:relative; min-height:100vh;
+  display:flex; align-items:center;
+  padding:10rem 5rem 6rem; overflow:hidden;
+}
+.hero-ghost {
+  position:absolute; right:-3rem; top:50%;
+  transform:translateY(-50%);
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(14rem,28vw,26rem);
+  color:rgba(255,255,255,0.018);
+  pointer-events:none; user-select:none; line-height:1; z-index:1;
+}
+.hero-content { position:relative; z-index:2; }
+.hero-tag {
+  display:inline-flex; align-items:center; gap:.8rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.72rem; letter-spacing:4px; text-transform:uppercase;
+  color:var(--accent); margin-bottom:1.8rem;
+}
+.blink { animation:blink 1.5s step-start infinite; }
+@keyframes blink { 50%{opacity:0} }
 
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    background: var(--accent);
-    color: #fff;
-    padding: 1rem 2.2rem;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.8rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    text-decoration: none;
-    font-weight: 700;
-    transition: transform 0.2s, box-shadow 0.2s;
-    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
-  }
-  .btn-primary:hover { transform: translate(-3px, -3px); box-shadow: 6px 6px 0 var(--accent2); }
+.hero h1 {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(5rem,13vw,11rem);
+  line-height:.88; letter-spacing:-1px; margin-bottom:2.2rem;
+}
+.hero h1 .solid { display:block; color:var(--text); }
+.hero h1 .outline { display:block; -webkit-text-stroke:2px var(--text); color:transparent; }
+.hero h1 .fire {
+  display:block;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.hero-desc { max-width:500px; font-size:1.05rem; color:var(--muted); line-height:1.75; margin-bottom:3rem; }
+.hero-desc strong { color:var(--text); }
+.hero-btns { display:flex; gap:1rem; flex-wrap:wrap; }
 
-  .btn-outline {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    background: transparent;
-    color: var(--text);
-    padding: 1rem 2.2rem;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.8rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    text-decoration: none;
-    font-weight: 700;
-    border: 2px solid var(--border);
-    transition: border-color 0.2s, color 0.2s;
-    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
-  }
-  .btn-outline:hover { border-color: var(--accent3); color: var(--accent3); }
+.btn-a {
+  display:inline-flex; align-items:center; gap:.6rem;
+  background:var(--accent); color:#fff;
+  padding:.95rem 2rem;
+  font-family:'JetBrains Mono',monospace; font-size:.78rem;
+  letter-spacing:2px; text-transform:uppercase;
+  text-decoration:none; font-weight:700;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);
+  transition:box-shadow .2s, transform .2s;
+}
+.btn-a:hover { transform:translate(-3px,-3px); box-shadow:6px 6px 0 var(--accent2); }
+.btn-b {
+  display:inline-flex; align-items:center; gap:.6rem;
+  background:transparent; color:var(--text);
+  padding:.95rem 2rem;
+  font-family:'JetBrains Mono',monospace; font-size:.78rem;
+  letter-spacing:2px; text-transform:uppercase;
+  text-decoration:none; font-weight:700;
+  border:1.5px solid var(--border);
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);
+  transition:border-color .2s, color .2s;
+}
+.btn-b:hover { border-color:var(--accent3); color:var(--accent3); }
 
-  /* Scrolling Ticker */
-  .ticker-wrap {
-    overflow: hidden;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    padding: 1rem 0;
-    background: var(--surface);
-  }
-  .ticker {
-    display: flex;
-    gap: 0;
-    animation: ticker-scroll 22s linear infinite;
-    white-space: nowrap;
-  }
-  .ticker-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 0 2rem;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.4rem;
-    letter-spacing: 3px;
-    color: var(--muted);
-  }
-  .ticker-dot { color: var(--accent); font-size: 1rem; }
-  @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+/* ── TICKER ── */
+.ticker-wrap { overflow:hidden; padding:.9rem 0; background:var(--accent); }
+.ticker { display:flex; white-space:nowrap; animation:tick 22s linear infinite; }
+.ticker-item {
+  display:inline-flex; align-items:center; gap:1.2rem; padding:0 2rem;
+  font-family:'Bebas Neue',sans-serif; font-size:1.2rem; letter-spacing:4px;
+  color:rgba(255,255,255,.9);
+}
+@keyframes tick { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
-  /* SECTIONS */
-  section { padding: 7rem 4rem; position: relative; z-index: 1; }
-  .section-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  .section-label::after {
-    content: '';
-    flex: 1;
-    max-width: 60px;
-    height: 1px;
-    background: var(--accent);
-  }
-  .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(3rem, 7vw, 6rem);
-    letter-spacing: 2px;
-    line-height: 1;
-    margin-bottom: 4rem;
-  }
+/* ── SECTION BASE ── */
+section { padding:8rem 5rem; position:relative; z-index:1; }
+.sec-eyebrow {
+  font-family:'JetBrains Mono',monospace; font-size:.68rem;
+  letter-spacing:4px; text-transform:uppercase; color:var(--accent);
+  margin-bottom:.8rem; display:flex; align-items:center; gap:.8rem;
+}
+.sec-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(3rem,7vw,6rem); letter-spacing:2px; line-height:1; margin-bottom:4rem;
+}
 
-  /* STATS */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    margin-bottom: 6rem;
-  }
-  .stat-box {
-    background: var(--surface);
-    padding: 2.5rem 2rem;
-    text-align: center;
-  }
-  .stat-box .num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 4rem;
-    color: var(--accent);
-    line-height: 1;
-  }
-  .stat-box .label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-top: 0.3rem;
-  }
+/* ── ABOUT ── */
+#about { background:var(--surface); }
+.about-grid { display:grid; grid-template-columns:320px 1fr; gap:5rem; align-items:start; }
+.profile-frame {
+  position:relative; aspect-ratio:1; overflow:hidden;
+  clip-path:polygon(0 0,calc(100% - 28px) 0,100% 28px,100% 100%,0 100%);
+  background:var(--card); border:1px solid var(--border);
+}
+.profile-frame img {
+  width:100%; height:100%; object-fit:cover;
+  filter:grayscale(15%) contrast(1.05);
+  transition:filter .4s, transform .4s; position:absolute; inset:0;
+}
+.profile-frame:hover img { filter:none; transform:scale(1.04); }
+.avatar-fallback {
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-family:'Bebas Neue',sans-serif; font-size:7rem; color:var(--accent);
+}
+.profile-badge {
+  position:absolute; bottom:0; left:0; right:0;
+  background:linear-gradient(to top,rgba(0,0,0,.9),transparent);
+  padding:2rem 1.2rem .8rem;
+  font-family:'JetBrains Mono',monospace; font-size:.62rem; letter-spacing:2px; color:rgba(255,255,255,.55);
+}
+.profile-badge strong { color:var(--accent); display:block; font-size:.8rem; margin-bottom:.2rem; }
 
-  /* SKILLS */
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-  }
-  .skill-card {
-    background: var(--card);
-    padding: 2rem;
-    transition: background 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-  .skill-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 3px;
-    height: 0;
-    background: var(--accent);
-    transition: height 0.3s;
-  }
-  .skill-card:hover::before { height: 100%; }
-  .skill-card:hover { background: #1a1a1a; }
-  .skill-icon { font-size: 1.8rem; margin-bottom: 1rem; }
-  .skill-name {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-  }
-  .skill-bar-track {
-    height: 2px;
-    background: var(--border);
-    margin-top: 1rem;
-  }
-  .skill-bar {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    width: 0;
-    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-  }
+.about-info h2 {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.5rem,5vw,4.5rem); letter-spacing:2px; line-height:1; margin-bottom:.4rem;
+}
+.role-tag {
+  font-family:'JetBrains Mono',monospace; font-size:.8rem;
+  color:var(--accent3); letter-spacing:3px; margin-bottom:1.8rem;
+}
+.about-info p { font-size:1rem; color:var(--muted); line-height:1.85; margin-bottom:1.2rem; max-width:560px; }
+.info-grid { display:grid; grid-template-columns:1fr 1fr; gap:.8rem; margin-top:2rem; }
+.info-pill {
+  background:var(--bg); border:1px solid var(--border);
+  padding:.9rem 1.1rem; display:flex; align-items:center; gap:.8rem;
+  transition:border-color .2s;
+}
+.info-pill:hover { border-color:var(--accent); }
+.info-pill > i { color:var(--accent); font-size:1.1rem; flex-shrink:0; }
+.pill-label { font-family:'JetBrains Mono',monospace; font-size:.58rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); }
+.pill-val { font-size:.88rem; font-weight:700; }
 
-  /* PROJECTS */
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 1.5rem;
-  }
-  .project-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    padding: 2rem;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s, border-color 0.3s;
-    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
-  }
-  .project-card:hover { transform: translateY(-6px); border-color: var(--accent); }
-  .project-card::after {
-    content: '';
-    position: absolute;
-    top: 0; right: 0;
-    width: 0; height: 0;
-    border-style: solid;
-    border-width: 0 20px 20px 0;
-    border-color: transparent var(--accent) transparent transparent;
-  }
-  .project-lang {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--accent3);
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .project-lang::before {
-    content: '';
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--accent3);
-  }
-  .project-name {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 1.3rem;
-    margin-bottom: 0.8rem;
-    line-height: 1.2;
-  }
-  .project-desc {
-    font-size: 0.88rem;
-    color: var(--muted);
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-  }
-  .project-meta { display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; }
-  .project-stat {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-  }
-  .project-link {
-    margin-left: auto;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--accent);
-    text-decoration: none;
-    letter-spacing: 1px;
-    transition: letter-spacing 0.2s;
-  }
-  .project-link:hover { letter-spacing: 3px; }
-  .loading-state {
-    text-align: center;
-    padding: 4rem;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.8rem;
-    color: var(--muted);
-    letter-spacing: 2px;
-    grid-column: 1 / -1;
-  }
-  .loading-state .spinner {
-    width: 40px; height: 40px;
-    border: 2px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin: 0 auto 1rem;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
+/* ── STATS ── */
+.stats-band {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:1px; background:var(--border); border:1px solid var(--border);
+}
+.stat-cell {
+  background:var(--bg); padding:2.5rem 2rem; text-align:center;
+  position:relative; overflow:hidden; transition:background .2s;
+}
+.stat-cell:hover { background:var(--surface); }
+.stat-cell::before {
+  content:''; position:absolute; top:0; left:0;
+  width:100%; height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transform:scaleX(0); transform-origin:left; transition:transform .4s;
+}
+.stat-cell:hover::before { transform:scaleX(1); }
+.stat-num { font-family:'Bebas Neue',sans-serif; font-size:3.5rem; color:var(--accent); line-height:1; }
+.stat-label { font-family:'JetBrains Mono',monospace; font-size:.6rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-top:.3rem; }
 
-  /* HIRE ME */
-  #hire {
-    background: var(--accent);
-    color: #fff;
-    position: relative;
-    overflow: hidden;
-    clip-path: polygon(0 0, 100% 0, 100% 85%, 95% 100%, 0 100%);
-  }
-  #hire::before {
-    content: 'HIRE';
-    position: absolute;
-    right: -2rem;
-    top: 50%;
-    transform: translateY(-50%);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(12rem, 25vw, 22rem);
-    color: rgba(0,0,0,0.08);
-    pointer-events: none;
-    line-height: 1;
-  }
-  #hire .section-label { color: rgba(255,255,255,0.7); }
-  #hire .section-label::after { background: rgba(255,255,255,0.4); }
-  #hire .section-title { color: #fff; }
-  .hire-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.2rem;
-    max-width: 700px;
-  }
-  .hire-form .full { grid-column: 1 / -1; }
-  .hire-input {
-    width: 100%;
-    background: rgba(0,0,0,0.2);
-    border: 2px solid rgba(255,255,255,0.3);
-    color: #fff;
-    padding: 1rem 1.2rem;
-    font-family: 'Syne', sans-serif;
-    font-size: 0.95rem;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .hire-input::placeholder { color: rgba(255,255,255,0.5); }
-  .hire-input:focus { border-color: #fff; }
-  .hire-input option { color: #000; background: #fff; }
-  .hire-submit {
-    background: #000;
-    color: #fff;
-    border: none;
-    padding: 1.1rem 2.5rem;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.4rem;
-    letter-spacing: 4px;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
-    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
-  }
-  .hire-submit:hover { background: #1a1a1a; transform: translate(-3px, -3px); box-shadow: 6px 6px 0 rgba(0,0,0,0.3); }
-  .success-msg {
-    display: none;
-    background: rgba(0,0,0,0.2);
-    border: 2px solid #fff;
-    padding: 1.5rem 2rem;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.85rem;
-    letter-spacing: 1px;
-    margin-top: 1rem;
-  }
+/* ── SKILLS ── */
+#skills { background:var(--bg); }
+.skills-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:1px; background:var(--border); border:1px solid var(--border);
+}
+.skill-tile {
+  background:var(--card); padding:1.8rem; position:relative; overflow:hidden;
+  transition:background .2s;
+}
+.skill-tile::after {
+  content:''; position:absolute; bottom:0; left:0;
+  width:0; height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:width .35s;
+}
+.skill-tile:hover::after { width:100%; }
+.skill-tile:hover { background:#161616; }
+.skill-icon-box {
+  width:44px; height:44px; margin-bottom:1.2rem;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(255,45,0,.08); border:1px solid rgba(255,45,0,.2);
+  border-radius:8px;
+}
+.skill-icon-box i { font-size:1.5rem; color:var(--accent); }
+.skill-name { font-weight:800; font-size:.95rem; margin-bottom:.8rem; }
+.skill-pct-row {
+  font-family:'JetBrains Mono',monospace; font-size:.63rem; color:var(--muted);
+  display:flex; justify-content:space-between; margin-bottom:.5rem;
+}
+.track { height:2px; background:var(--border); }
+.bar { height:100%; width:0; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width 1.4s cubic-bezier(.4,0,.2,1); }
 
-  /* SOCIAL */
-  .social-strip {
-    display: flex;
-    justify-content: center;
-    gap: 0;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-  .social-link {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 2.5rem 3rem;
-    text-decoration: none;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    transition: color 0.2s, background 0.2s;
-    border-right: 1px solid var(--border);
-    flex: 1;
-    text-align: center;
-  }
-  .social-link:last-child { border-right: none; }
-  .social-link:hover { color: var(--text); background: var(--card); }
-  .social-link svg { width: 24px; height: 24px; margin-bottom: 0.3rem; transition: transform 0.2s; }
-  .social-link:hover svg { transform: translateY(-4px); }
-  .social-link.github:hover svg { color: #fff; }
-  .social-link.linkedin:hover svg { color: #0a66c2; }
-  .social-link.twitter:hover svg { color: #1d9bf0; }
-  .social-link.instagram:hover { color: #e1306c; }
-  .social-link.facebook:hover svg { color: #1877f2; }
+/* ── PROJECTS ── */
+#projects { background:var(--surface); }
+.proj-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:1.2rem; }
+.proj-card {
+  background:var(--bg); border:1px solid var(--border);
+  padding:2rem; position:relative; overflow:hidden;
+  clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,0 100%);
+  transition:transform .3s, border-color .3s;
+}
+.proj-card:hover { transform:translateY(-5px); border-color:var(--accent); }
+.proj-card::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg,rgba(255,45,0,.04) 0%,transparent 60%);
+  opacity:0; transition:opacity .3s;
+}
+.proj-card:hover::before { opacity:1; }
+.proj-corner {
+  position:absolute; top:0; right:0; width:0; height:0; border-style:solid;
+  border-width:0 18px 18px 0; border-color:transparent var(--accent) transparent transparent;
+}
+.proj-lang {
+  font-family:'JetBrains Mono',monospace; font-size:.63rem; letter-spacing:2px;
+  text-transform:uppercase; display:flex; align-items:center; gap:.5rem; margin-bottom:1rem;
+}
+.lang-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+.proj-name { font-family:'Syne',sans-serif; font-weight:800; font-size:1.2rem; margin-bottom:.7rem; line-height:1.2; }
+.proj-desc { font-size:.85rem; color:var(--muted); line-height:1.65; margin-bottom:1.4rem; }
+.proj-footer { display:flex; align-items:center; gap:1.2rem; }
+.proj-stat { font-family:'JetBrains Mono',monospace; font-size:.68rem; color:var(--muted); display:flex; align-items:center; gap:.3rem; }
+.proj-stat i { color:var(--accent2); }
+.proj-link {
+  margin-left:auto; text-decoration:none;
+  font-family:'JetBrains Mono',monospace; font-size:.68rem; color:var(--accent);
+  display:flex; align-items:center; gap:.3rem; letter-spacing:1px;
+  transition:gap .2s, letter-spacing .2s;
+}
+.proj-link:hover { gap:.6rem; letter-spacing:2px; }
+.loading-card {
+  grid-column:1/-1; text-align:center; padding:5rem;
+  font-family:'JetBrains Mono',monospace; font-size:.78rem; color:var(--muted); letter-spacing:2px;
+}
+.spin { width:38px; height:38px; margin:0 auto 1.2rem; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spinning .7s linear infinite; }
+@keyframes spinning { to { transform:rotate(360deg); } }
 
-  /* FOOTER */
-  footer {
-    padding: 3rem 4rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid var(--border);
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-  .footer-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.6rem;
-    letter-spacing: 3px;
-  }
-  .footer-logo span { color: var(--accent); }
-  footer p {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 1px;
-  }
+/* ── HIRE ── */
+#hire { background:var(--accent); color:#fff; position:relative; overflow:hidden; }
+#hire::after {
+  content:'HIRE'; position:absolute; right:-4rem; top:50%;
+  transform:translateY(-50%);
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(10rem,22vw,20rem);
+  color:rgba(0,0,0,.06); pointer-events:none; line-height:1;
+}
+#hire .sec-eyebrow { color:rgba(255,255,255,.65); }
+#hire .sec-title { color:#fff; }
+.hire-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:720px; }
+.hire-grid .span2 { grid-column:1/-1; }
+.f-input {
+  width:100%; background:rgba(0,0,0,.18); border:1.5px solid rgba(255,255,255,.25);
+  color:#fff; padding:.95rem 1.2rem;
+  font-family:'Syne',sans-serif; font-size:.95rem; outline:none; transition:border-color .2s;
+  -webkit-appearance:none;
+}
+.f-input::placeholder { color:rgba(255,255,255,.45); }
+.f-input:focus { border-color:#fff; }
+.f-input option { color:#000; background:#fff; }
+.f-submit {
+  background:#000; color:#fff; border:none; padding:1.05rem 2.5rem;
+  font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:5px; cursor:pointer;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);
+  transition:background .2s, transform .2s, box-shadow .2s;
+  display:inline-flex; align-items:center; gap:.5rem;
+}
+.f-submit:hover { background:#111; transform:translate(-3px,-3px); box-shadow:6px 6px 0 rgba(0,0,0,.3); }
+.f-submit:disabled { opacity:.6; cursor:not-allowed; transform:none; box-shadow:none; }
+.form-msg {
+  display:none; margin-top:1rem; padding:1.2rem 1.5rem;
+  font-family:'JetBrains Mono',monospace; font-size:.8rem; letter-spacing:1px;
+  border:1.5px solid #fff; background:rgba(0,0,0,.15);
+}
+.form-msg.err { border-color:rgba(255,150,150,.6); }
 
-  /* PROFILE SECTION */
-  .profile-section {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 6rem;
-    align-items: start;
-  }
-  .profile-img-wrap {
-    position: relative;
-  }
-  .profile-img-box {
-    width: 100%;
-    aspect-ratio: 1;
-    background: var(--card);
-    border: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-    clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 0 100%);
-  }
-  .profile-img-box img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    filter: grayscale(20%);
-    transition: filter 0.3s;
-  }
-  .profile-img-box:hover img { filter: grayscale(0%); }
-  .profile-img-box .fallback-avatar {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 8rem;
-    color: var(--accent);
-    letter-spacing: 0;
-  }
-  .profile-corner {
-    position: absolute;
-    bottom: -1px; right: -1px;
-    background: var(--accent);
-    padding: 0.6rem 1.2rem;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #fff;
-  }
-  .profile-info h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2.5rem, 5vw, 4.5rem);
-    letter-spacing: 2px;
-    line-height: 1;
-    margin-bottom: 0.5rem;
-  }
-  .profile-info .title-tag {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.8rem;
-    color: var(--accent3);
-    letter-spacing: 3px;
-    margin-bottom: 2rem;
-  }
-  .profile-info p {
-    font-size: 1rem;
-    color: var(--muted);
-    line-height: 1.8;
-    margin-bottom: 2.5rem;
-    max-width: 600px;
-  }
-  .profile-details {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-  .profile-detail-item {
-    background: var(--card);
-    border: 1px solid var(--border);
-    padding: 1rem 1.2rem;
-  }
-  .profile-detail-item .detail-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 0.3rem;
-  }
-  .profile-detail-item .detail-value {
-    font-size: 0.9rem;
-    font-weight: 700;
-  }
+/* ── SOCIAL ── */
+.social-strip { display:flex; background:var(--bg); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+.soc-link {
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:.5rem;
+  padding:2.2rem 1rem; text-decoration:none; color:var(--muted);
+  font-family:'JetBrains Mono',monospace; font-size:.6rem; letter-spacing:2px; text-transform:uppercase;
+  border-right:1px solid var(--border); transition:background .2s, color .2s; position:relative; overflow:hidden;
+}
+.soc-link:last-child { border-right:none; }
+.soc-link i { font-size:1.5rem; transition:transform .25s; }
+.soc-link:hover i { transform:translateY(-5px); }
+.soc-link::before {
+  content:''; position:absolute; bottom:0; left:0;
+  width:100%; height:2px; transform:scaleX(0); transition:transform .3s;
+}
+.soc-link:hover { background:var(--surface); color:var(--text); }
+.soc-link.gh::before { background:#fff; }
+.soc-link.li::before { background:#0a66c2; }
+.soc-link.tw::before { background:#1d9bf0; }
+.soc-link.ig::before { background:linear-gradient(90deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+.soc-link.fb::before { background:#1877f2; }
+.soc-link:hover::before { transform:scaleX(1); }
 
-  /* Animations */
-  .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
-  .fade-in.visible { opacity: 1; transform: none; }
+/* ── FOOTER ── */
+footer {
+  padding:2.5rem 5rem; display:flex; justify-content:space-between; align-items:center;
+  border-top:1px solid var(--border); flex-wrap:wrap; gap:1rem;
+}
+.f-logo { font-family:'Bebas Neue',sans-serif; font-size:1.5rem; letter-spacing:3px; }
+.f-logo span { color:var(--accent); }
+footer p { font-family:'JetBrains Mono',monospace; font-size:.6rem; color:var(--muted); letter-spacing:1px; }
 
-  @media (max-width: 900px) {
-    nav { padding: 1.2rem 1.5rem; }
-    .nav-links { gap: 1.2rem; }
-    section { padding: 5rem 1.5rem; }
-    .hero { padding: 9rem 1.5rem 5rem; }
-    .profile-section { grid-template-columns: 1fr; gap: 3rem; }
-    .social-link { padding: 1.5rem 1rem; }
-    .hire-form { grid-template-columns: 1fr; }
-    .hire-form .full { grid-column: 1; }
-    footer { flex-direction: column; text-align: center; }
-  }
+@media(max-width:900px){
+  nav { padding:1.2rem 1.5rem; }
+  .nav-links { gap:1.2rem; }
+  section { padding:5rem 1.5rem; }
+  .hero { padding:8rem 1.5rem 5rem; }
+  .about-grid { grid-template-columns:1fr; gap:3rem; }
+  .stats-band { grid-template-columns:1fr 1fr; }
+  .social-strip { flex-wrap:wrap; }
+  .soc-link { flex:0 0 33.333%; border-bottom:1px solid var(--border); }
+  .hire-grid { grid-template-columns:1fr; }
+  .hire-grid .span2 { grid-column:1; }
+  footer { flex-direction:column; text-align:center; }
+}
 </style>
 </head>
 <body>
 
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-text">RS</div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+</div>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
 
 <!-- NAV -->
 <nav>
@@ -677,26 +429,31 @@
     <a href="#about">About</a>
     <a href="#skills">Skills</a>
     <a href="#projects">Projects</a>
-    <a href="#hire" class="hire-btn-nav">Hire Me</a>
+    <a href="#hire" class="nav-hire">Hire Me</a>
   </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-bg-number">RS</div>
-  <div>
-    <div class="hero-tag">Available for Freelance</div>
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-ghost">RS</div>
+  <div class="hero-content">
+    <div class="hero-tag">
+      <i class="ri-checkbox-blank-circle-fill blink" style="color:var(--accent);font-size:.6rem;"></i>
+      Available for Freelance
+    </div>
     <h1>
-      <span class="line">RAKESH</span>
-      <span class="line stroke">SHARMA</span>
-      <span class="line highlight">DEVELOPER</span>
+      <span class="solid">RAKESH</span>
+      <span class="outline">SHARMA</span>
+      <span class="fire">DEVELOPER</span>
     </h1>
-    <p class="hero-sub">
-      Crafting bold digital experiences with clean code, modern frameworks, and a relentless eye for design. Based in India — working globally.
+    <p class="hero-desc">
+      Crafting <strong>bold digital experiences</strong> with clean code, modern frameworks, and a relentless eye for design. Based in <strong>India</strong> — working globally.
     </p>
-    <div class="hero-actions">
-      <a href="#projects" class="btn-primary">↗ View Work</a>
-      <a href="#hire" class="btn-outline">Hire Me →</a>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-a"><i class="ri-arrow-right-up-line"></i> View Work</a>
+      <a href="#hire" class="btn-b"><i class="ri-user-add-line"></i> Hire Me</a>
+      <a href="https://github.com/rakeshsharma2006" target="_blank" class="btn-b"><i class="ri-github-fill"></i> GitHub</a>
     </div>
   </div>
 </section>
@@ -704,110 +461,96 @@
 <!-- TICKER -->
 <div class="ticker-wrap">
   <div class="ticker">
-    <span class="ticker-item">Frontend Dev <span class="ticker-dot">◆</span></span>
-    <span class="ticker-item">Full Stack <span class="ticker-dot">◆</span></span>
-    <span class="ticker-item">Open Source <span class="ticker-dot">◆</span></span>
-    <span class="ticker-item">UI/UX Enthusiast <span class="ticker-dot">◆</span></span>
-    <span class="ticker-item">Problem Solver <span class="ticker-dot">◆</span></span>
-    <span class="ticker-item">Code Craftsman <span class="ticker-dot">◆</span></span>
-    <!-- duplicate for seamless loop -->
-    <span class="ticker-item">Frontend Dev <span class="ticker-dot">◆</span></span>
-    <span class="ticker-item">Full Stack <span class="ticker-dot">◆</span></span>
-    <span class="ticker-item">Open Source <span class="ticker-dot">◆</span></span>
-    <span class="ticker-item">UI/UX Enthusiast <span class="ticker-dot">◆</span></span>
-    <span class="ticker-item">Problem Solver <span class="ticker-dot">◆</span></span>
-    <span class="ticker-item">Code Craftsman <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Frontend Dev <span>◆</span></span>
+    <span class="ticker-item">Full Stack <span>◆</span></span>
+    <span class="ticker-item">Flutter Dev <span>◆</span></span>
+    <span class="ticker-item">Open Source <span>◆</span></span>
+    <span class="ticker-item">UI / UX <span>◆</span></span>
+    <span class="ticker-item">Problem Solver <span>◆</span></span>
+    <span class="ticker-item">Code Craftsman <span>◆</span></span>
+    <span class="ticker-item">Freelancer <span>◆</span></span>
+    <span class="ticker-item">Frontend Dev <span>◆</span></span>
+    <span class="ticker-item">Full Stack <span>◆</span></span>
+    <span class="ticker-item">Flutter Dev <span>◆</span></span>
+    <span class="ticker-item">Open Source <span>◆</span></span>
+    <span class="ticker-item">UI / UX <span>◆</span></span>
+    <span class="ticker-item">Problem Solver <span>◆</span></span>
+    <span class="ticker-item">Code Craftsman <span>◆</span></span>
+    <span class="ticker-item">Freelancer <span>◆</span></span>
   </div>
 </div>
 
 <!-- ABOUT -->
 <section id="about">
-  <div class="section-label">About Me</div>
-  <div class="profile-section fade-in">
-    <div class="profile-img-wrap">
-      <div class="profile-img-box" id="profile-img-box">
-        <div class="fallback-avatar" id="fallback-avatar">RS</div>
-        <img id="profile-img" src="" alt="Rakesh Sharma" style="display:none; position:absolute;inset:0;">
+  <div class="sec-eyebrow"><i class="ri-user-3-line"></i> About Me</div>
+  <div class="about-grid" data-aos="fade-up">
+    <div>
+      <div class="profile-frame">
+        <div class="avatar-fallback" id="avatar-fallback">RS</div>
+        <img id="profile-img" src="" alt="Rakesh Sharma">
+        <div class="profile-badge">
+          <strong id="profile-handle">@rakeshsharma2006</strong>
+          GitHub Developer
+        </div>
       </div>
-      <div class="profile-corner">@rakeshsharma2006</div>
     </div>
-    <div class="profile-info">
+    <div class="about-info">
       <h2 id="profile-name">RAKESH SHARMA</h2>
-      <div class="title-tag" id="profile-bio">LOADING PROFILE...</div>
-      <p id="profile-about">
-        A passionate developer who loves turning complex problems into elegant, user-friendly solutions. Experienced in building full-stack applications with modern technologies and a strong focus on performance, accessibility, and design.
-      </p>
-      <div class="profile-details">
-        <div class="profile-detail-item">
-          <div class="detail-label">Location</div>
-          <div class="detail-value" id="profile-location">India</div>
-        </div>
-        <div class="profile-detail-item">
-          <div class="detail-label">GitHub Repos</div>
-          <div class="detail-value" id="profile-repos">—</div>
-        </div>
-        <div class="profile-detail-item">
-          <div class="detail-label">Followers</div>
-          <div class="detail-value" id="profile-followers">—</div>
-        </div>
-        <div class="profile-detail-item">
-          <div class="detail-label">Following</div>
-          <div class="detail-value" id="profile-following">—</div>
-        </div>
+      <div class="role-tag" id="profile-bio">FULL STACK DEVELOPER</div>
+      <p>A passionate developer who loves turning complex problems into <strong style="color:var(--text)">elegant, user-friendly solutions</strong>. Experienced in building full-stack and mobile applications with modern technologies and a strong focus on performance, accessibility, and design.</p>
+      <div class="info-grid">
+        <div class="info-pill"><i class="ri-map-pin-2-line"></i><div><div class="pill-label">Location</div><div class="pill-val" id="p-location">India</div></div></div>
+        <div class="info-pill"><i class="ri-folder-3-line"></i><div><div class="pill-label">Public Repos</div><div class="pill-val" id="p-repos">—</div></div></div>
+        <div class="info-pill"><i class="ri-group-line"></i><div><div class="pill-label">Followers</div><div class="pill-val" id="p-followers">—</div></div></div>
+        <div class="info-pill"><i class="ri-heart-line"></i><div><div class="pill-label">Following</div><div class="pill-val" id="p-following">—</div></div></div>
       </div>
     </div>
+  </div>
+
+  <div class="stats-band" style="margin-top:4rem;" data-aos="fade-up" data-aos-delay="100">
+    <div class="stat-cell"><div class="stat-num" id="s-repos">—</div><div class="stat-label"><i class="ri-git-repository-line"></i> Repositories</div></div>
+    <div class="stat-cell"><div class="stat-num" id="s-followers">—</div><div class="stat-label"><i class="ri-group-line"></i> Followers</div></div>
+    <div class="stat-cell"><div class="stat-num" id="s-following">—</div><div class="stat-label"><i class="ri-heart-line"></i> Following</div></div>
+    <div class="stat-cell"><div class="stat-num">∞</div><div class="stat-label"><i class="ri-cup-line"></i> Coffee Cups</div></div>
   </div>
 </section>
 
-<!-- STATS -->
-<div style="padding: 0 4rem;">
-  <div class="stats-row fade-in" id="stats-row">
-    <div class="stat-box"><div class="num" id="stat-repos">—</div><div class="label">GitHub Repos</div></div>
-    <div class="stat-box"><div class="num" id="stat-followers">—</div><div class="label">Followers</div></div>
-    <div class="stat-box"><div class="num" id="stat-following">—</div><div class="label">Following</div></div>
-    <div class="stat-box"><div class="num">∞</div><div class="label">Coffee Consumed</div></div>
-  </div>
-</div>
-
 <!-- SKILLS -->
 <section id="skills">
-  <div class="section-label">Expertise</div>
-  <div class="section-title fade-in">SKILLS &<br>TECHNOLOGIES</div>
-  <div class="skills-grid fade-in">
-    <div class="skill-card"><div class="skill-icon">⚛️</div><div class="skill-name">React / Next.js</div><div class="skill-bar-track"><div class="skill-bar" data-pct="90"></div></div></div>
-    <div class="skill-card"><div class="skill-icon">🟨</div><div class="skill-name">JavaScript / TypeScript</div><div class="skill-bar-track"><div class="skill-bar" data-pct="88"></div></div></div>
-    <div class="skill-card"><div class="skill-icon">🐍</div><div class="skill-name">Python</div><div class="skill-bar-track"><div class="skill-bar" data-pct="80"></div></div></div>
-    <div class="skill-card"><div class="skill-icon">🎨</div><div class="skill-name">HTML / CSS</div><div class="skill-bar-track"><div class="skill-bar" data-pct="95"></div></div></div>
-    <div class="skill-card"><div class="skill-icon">🟢</div><div class="skill-name">Node.js / Express</div><div class="skill-bar-track"><div class="skill-bar" data-pct="78"></div></div></div>
-    <div class="skill-card"><div class="skill-icon">🗄️</div><div class="skill-name">SQL / MongoDB</div><div class="skill-bar-track"><div class="skill-bar" data-pct="75"></div></div></div>
-    <div class="skill-card"><div class="skill-icon">🐙</div><div class="skill-name">Git / GitHub</div><div class="skill-bar-track"><div class="skill-bar" data-pct="92"></div></div></div>
-    <div class="skill-card"><div class="skill-icon">🐳</div><div class="skill-name">Docker / DevOps</div><div class="skill-bar-track"><div class="skill-bar" data-pct="65"></div></div></div>
+  <div class="sec-eyebrow"><i class="ri-code-s-slash-line"></i> Expertise</div>
+  <div class="sec-title" data-aos="fade-up">SKILLS &<br>TECHNOLOGIES</div>
+  <div class="skills-grid" data-aos="fade-up" data-aos-delay="80">
+    <div class="skill-tile"><div class="skill-icon-box"><i class="ri-reactjs-line"></i></div><div class="skill-name">React / Next.js</div><div class="skill-pct-row"><span>Frontend Framework</span><span>90%</span></div><div class="track"><div class="bar" data-p="90"></div></div></div>
+    <div class="skill-tile"><div class="skill-icon-box"><i class="ri-javascript-line"></i></div><div class="skill-name">JavaScript / TypeScript</div><div class="skill-pct-row"><span>Core Language</span><span>88%</span></div><div class="track"><div class="bar" data-p="88"></div></div></div>
+    <div class="skill-tile"><div class="skill-icon-box"><i class="ri-flutter-line"></i></div><div class="skill-name">Flutter / Dart</div><div class="skill-pct-row"><span>Mobile Dev</span><span>72%</span></div><div class="track"><div class="bar" data-p="72"></div></div></div>
+    <div class="skill-tile"><div class="skill-icon-box"><i class="ri-python-line"></i></div><div class="skill-name">Python</div><div class="skill-pct-row"><span>Backend / Scripts</span><span>80%</span></div><div class="track"><div class="bar" data-p="80"></div></div></div>
+    <div class="skill-tile"><div class="skill-icon-box"><i class="ri-html5-line"></i></div><div class="skill-name">HTML / CSS</div><div class="skill-pct-row"><span>Markup & Styling</span><span>95%</span></div><div class="track"><div class="bar" data-p="95"></div></div></div>
+    <div class="skill-tile"><div class="skill-icon-box"><i class="ri-server-line"></i></div><div class="skill-name">Node.js / Express</div><div class="skill-pct-row"><span>Server Side</span><span>78%</span></div><div class="track"><div class="bar" data-p="78"></div></div></div>
+    <div class="skill-tile"><div class="skill-icon-box"><i class="ri-database-2-line"></i></div><div class="skill-name">SQL / MongoDB</div><div class="skill-pct-row"><span>Databases</span><span>75%</span></div><div class="track"><div class="bar" data-p="75"></div></div></div>
+    <div class="skill-tile"><div class="skill-icon-box"><i class="ri-github-fill"></i></div><div class="skill-name">Git / GitHub</div><div class="skill-pct-row"><span>Version Control</span><span>92%</span></div><div class="track"><div class="bar" data-p="92"></div></div></div>
   </div>
 </section>
 
 <!-- PROJECTS -->
-<section id="projects" style="padding-top: 2rem;">
-  <div class="section-label">Work</div>
-  <div class="section-title fade-in">GITHUB<br>PROJECTS</div>
-  <div class="projects-grid" id="projects-grid">
-    <div class="loading-state">
-      <div class="spinner"></div>
-      FETCHING REPOSITORIES FROM GITHUB...
-    </div>
+<section id="projects">
+  <div class="sec-eyebrow"><i class="ri-folder-open-line"></i> Work</div>
+  <div class="sec-title" data-aos="fade-up">GITHUB<br>PROJECTS</div>
+  <div class="proj-grid" id="proj-grid">
+    <div class="loading-card"><div class="spin"></div>FETCHING REPOSITORIES...</div>
   </div>
 </section>
 
 <!-- HIRE ME -->
 <section id="hire">
-  <div class="section-label">Let's Work Together</div>
-  <div class="section-title">HIRE ME AS<br>FREELANCER</div>
-  <form class="hire-form" id="hire-form" action="https://formspree.io/f/mbdpdprp" method="POST" onsubmit="submitHire(event)">
-    <input type="text" class="hire-input" id="hire-name" name="name" placeholder="Your Name *" required>
-    <input type="email" class="hire-input" id="hire-email" name="email" placeholder="Email Address *" required>
-    <select class="hire-input" id="hire-type" name="project_type">
+  <div class="sec-eyebrow"><i class="ri-handshake-line"></i> Let's Work Together</div>
+  <div class="sec-title">HIRE ME AS<br>FREELANCER</div>
+  <form class="hire-grid" id="hire-form" onsubmit="submitHire(event)">
+    <input type="text" class="f-input" name="name" placeholder="Your Name *" required>
+    <input type="email" class="f-input" name="email" placeholder="Email Address *" required>
+    <select class="f-input" name="project_type">
       <option value="">Project Type</option>
       <option>Website / Web App</option>
-      <option>Mobile App</option>
+      <option>Mobile App (Flutter)</option>
       <option>Frontend Development</option>
       <option>Backend / API</option>
       <option>Full Stack Project</option>
@@ -815,7 +558,7 @@
       <option>Consulting</option>
       <option>Other</option>
     </select>
-    <select class="hire-input" id="hire-budget" name="budget">
+    <select class="f-input" name="budget">
       <option value="">Budget Range</option>
       <option>Under $500</option>
       <option>$500 – $1,500</option>
@@ -823,195 +566,212 @@
       <option>$5,000 – $15,000</option>
       <option>$15,000+</option>
     </select>
-    <textarea class="hire-input full" id="hire-msg" name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
-    <!-- Honeypot spam filter -->
+    <textarea class="f-input span2" name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
     <input type="text" name="_gotcha" style="display:none">
     <div>
-      <button type="submit" class="hire-submit" id="hire-btn">SEND REQUEST ↗</button>
+      <button type="submit" class="f-submit" id="hire-btn">
+        <i class="ri-send-plane-fill"></i> SEND REQUEST
+      </button>
     </div>
   </form>
-  <div class="success-msg" id="success-msg">
-    ✓ MESSAGE SENT! I'll get back to you within 24 hours.
-  </div>
-  <div class="success-msg" id="error-msg" style="border-color:rgba(255,100,100,0.6); display:none;">
-    ✗ SOMETHING WENT WRONG. Please try again or email directly.
-  </div>
+  <div class="form-msg" id="ok-msg">✓ MESSAGE SENT! I'll get back to you within 24 hours.</div>
+  <div class="form-msg err" id="err-msg">✗ SOMETHING WENT WRONG. Please try again.</div>
 </section>
 
 <!-- SOCIAL -->
 <div class="social-strip">
-  <a href="https://github.com/rakeshsharma2006" target="_blank" class="social-link github">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0 1 12 6.8c.85 0 1.71.11 2.51.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0 0 22 12c0-5.52-4.48-10-10-10z"/></svg>
-    GitHub
-  </a>
-  <a href="https://www.linkedin.com/in/rakesh-sharma-72777528a" target="_blank" class="social-link linkedin">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.44c.98 0 1.79-.77 1.79-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
-    LinkedIn
-  </a>
-  <a href="https://www.instagram.com/__rakesh___s/" target="_blank" class="social-link instagram">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-    Instagram
-  </a>
-  <a href="https://www.facebook.com/happysharma.in/" target="_blank" class="social-link facebook">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-    Facebook
-  </a>
+  <a href="https://github.com/rakeshsharma2006" target="_blank" class="soc-link gh"><i class="ri-github-fill"></i>GitHub</a>
+  <a href="https://www.linkedin.com/in/rakesh-sharma-72777528a" target="_blank" class="soc-link li"><i class="ri-linkedin-box-fill"></i>LinkedIn</a>
+  <a href="https://twitter.com/rakeshsharma2006" target="_blank" class="soc-link tw"><i class="ri-twitter-x-fill"></i>Twitter</a>
+  <a href="https://www.instagram.com/__rakesh___s/" target="_blank" class="soc-link ig"><i class="ri-instagram-fill"></i>Instagram</a>
+  <a href="https://www.facebook.com/happysharma.in/" target="_blank" class="soc-link fb"><i class="ri-facebook-box-fill"></i>Facebook</a>
 </div>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">R<span>.</span>SHARMA</div>
+  <div class="f-logo">R<span>.</span>SHARMA</div>
   <p>© 2025 RAKESH SHARMA — ALL RIGHTS RESERVED</p>
-  <p>BUILT WITH ❤️ by Rakesh Sharma</p>
+  <p style="display:flex;align-items:center;gap:.4rem;"><i class="ri-heart-fill" style="color:var(--accent)"></i> BUILT BY RAKESH SHARMA</p>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 <script>
-// Custom cursor
-const cursor = document.getElementById('cursor');
-const ring = document.getElementById('cursor-ring');
-let mx = 0, my = 0, rx = 0, ry = 0;
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
-function animRing() { rx += (mx - rx) * 0.15; ry += (my - ry) * 0.15; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animRing); }
-animRing();
-document.querySelectorAll('a, button, .skill-card, .project-card').forEach(el => {
-  el.addEventListener('mouseenter', () => { cursor.style.transform = 'translate(-50%, -50%) scale(2)'; ring.style.transform = 'translate(-50%, -50%) scale(1.5)'; });
-  el.addEventListener('mouseleave', () => { cursor.style.transform = 'translate(-50%, -50%) scale(1)'; ring.style.transform = 'translate(-50%, -50%) scale(1)'; });
+// ── LOADER ──
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const l = document.getElementById('loader');
+    l.style.opacity = '0';
+    setTimeout(() => l.style.display = 'none', 600);
+  }, 1900);
 });
 
-// Scroll animations
-const observer = new IntersectionObserver(entries => {
+// ── AOS ──
+AOS.init({ duration: 700, once: true, offset: 60 });
+
+// ── CURSOR ──
+const cur = document.getElementById('cur');
+const ring = document.getElementById('cur-ring');
+let mx=0, my=0, rx=0, ry=0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cur.style.left = mx+'px'; cur.style.top = my+'px';
+});
+(function animRing(){
+  rx += (mx-rx)*.13; ry += (my-ry)*.13;
+  ring.style.left = rx+'px'; ring.style.top = ry+'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a, button, .proj-card, .skill-tile').forEach(el => {
+  el.addEventListener('mouseenter', () => { cur.style.transform='translate(-50%,-50%) scale(2.5)'; ring.style.transform='translate(-50%,-50%) scale(1.8)'; });
+  el.addEventListener('mouseleave', () => { cur.style.transform='translate(-50%,-50%) scale(1)'; ring.style.transform='translate(-50%,-50%) scale(1)'; });
+});
+
+// ── CANVAS PARTICLE NETWORK ──
+(function(){
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  const pts = Array.from({length:90}, () => ({
+    x: Math.random()*2000, y: Math.random()*1000,
+    vx: (Math.random()-.5)*.35, vy: (Math.random()-.5)*.35,
+    r: Math.random()*1.5+.4, o: Math.random()*.35+.08
+  }));
+  function resize(){ W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; }
+  resize(); window.addEventListener('resize', resize);
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<0) p.x=W; if(p.x>W) p.x=0;
+      if(p.y<0) p.y=H; if(p.y>H) p.y=0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(255,45,0,${p.o})`;
+      ctx.fill();
+    });
+    for(let i=0;i<pts.length;i++){
+      for(let j=i+1;j<pts.length;j++){
+        const dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<130){
+          ctx.beginPath();
+          ctx.moveTo(pts[i].x, pts[i].y);
+          ctx.lineTo(pts[j].x, pts[j].y);
+          ctx.strokeStyle = `rgba(255,45,0,${.1*(1-d/130)})`;
+          ctx.lineWidth = .5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── SKILL BARS ──
+const skillObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      // Animate skill bars
-      e.target.querySelectorAll && e.target.querySelectorAll('.skill-bar').forEach(bar => {
-        bar.style.width = bar.dataset.pct + '%';
+    if(e.isIntersecting) {
+      e.target.querySelectorAll('.bar').forEach(b => {
+        setTimeout(() => b.style.width = b.dataset.p+'%', 200);
       });
     }
   });
-}, { threshold: 0.1 });
-document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+}, {threshold:.15});
+document.querySelectorAll('.skills-grid').forEach(el => skillObs.observe(el));
 
-// Also trigger skill bars on the skills grid
-const skillsObserver = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.querySelectorAll('.skill-bar').forEach(bar => {
-        setTimeout(() => { bar.style.width = bar.dataset.pct + '%'; }, 200);
-      });
-    }
-  });
-}, { threshold: 0.2 });
-const skillsGrid = document.querySelector('.skills-grid');
-if (skillsGrid) skillsObserver.observe(skillsGrid);
-
-// Language colors
-const langColors = {
-  JavaScript: '#f7df1e', TypeScript: '#3178c6', Python: '#3572A5',
-  HTML: '#e34c26', CSS: '#563d7c', Java: '#b07219', 'C++': '#f34b7d',
-  C: '#555555', Ruby: '#701516', Go: '#00ADD8', Rust: '#dea584',
-  Swift: '#F05138', Kotlin: '#A97BFF', PHP: '#4F5D95', Shell: '#89e051',
-  Vue: '#41b883', Jupyter: '#DA5B0B', Dart: '#00B4AB'
+// ── LANG COLORS ──
+const LC = {
+  JavaScript:'#f7df1e', TypeScript:'#3178c6', Python:'#3572A5',
+  HTML:'#e34c26', CSS:'#563d7c', Java:'#b07219', 'C++':'#f34b7d',
+  C:'#555', Ruby:'#701516', Go:'#00ADD8', Rust:'#dea584',
+  Swift:'#F05138', Kotlin:'#A97BFF', PHP:'#4F5D95', Shell:'#89e051',
+  Vue:'#41b883', Dart:'#00B4AB', Jupyter:'#DA5B0B'
 };
 
-// GitHub API
+// ── GITHUB API ──
 const USERNAME = 'rakeshsharma2006';
 
-async function loadGitHub() {
+async function loadGH(){
   try {
-    // Profile
-    const profileRes = await fetch(`https://api.github.com/users/${USERNAME}`);
-    const profile = await profileRes.json();
+    const [pRes, rRes] = await Promise.all([
+      fetch(`https://api.github.com/users/${USERNAME}`),
+      fetch(`https://api.github.com/users/${USERNAME}/repos?sort=updated&per_page=12`)
+    ]);
+    const p = await pRes.json();
+    const repos = await rRes.json();
 
-    if (profile.avatar_url) {
+    if(p.avatar_url){
       const img = document.getElementById('profile-img');
-      img.src = profile.avatar_url;
-      img.style.display = 'block';
-      document.getElementById('fallback-avatar').style.display = 'none';
+      img.src = p.avatar_url; img.style.display = 'block';
+      document.getElementById('avatar-fallback').style.display = 'none';
     }
-    if (profile.name) document.getElementById('profile-name').textContent = profile.name.toUpperCase();
-    if (profile.bio) document.getElementById('profile-bio').textContent = profile.bio;
-    if (profile.location) document.getElementById('profile-location').textContent = profile.location;
-    document.getElementById('profile-repos').textContent = profile.public_repos || '—';
-    document.getElementById('profile-followers').textContent = profile.followers || '—';
-    document.getElementById('profile-following').textContent = profile.following || '—';
-    document.getElementById('stat-repos').textContent = profile.public_repos || '—';
-    document.getElementById('stat-followers').textContent = profile.followers || '—';
-    document.getElementById('stat-following').textContent = profile.following || '—';
+    if(p.name) document.getElementById('profile-name').textContent = p.name.toUpperCase();
+    if(p.bio) document.getElementById('profile-bio').textContent = p.bio;
+    if(p.login) document.getElementById('profile-handle').textContent = '@'+p.login;
+    if(p.location) document.getElementById('p-location').textContent = p.location;
+    document.getElementById('p-repos').textContent = p.public_repos||'—';
+    document.getElementById('p-followers').textContent = p.followers||'—';
+    document.getElementById('p-following').textContent = p.following||'—';
+    document.getElementById('s-repos').textContent = p.public_repos||'—';
+    document.getElementById('s-followers').textContent = p.followers||'—';
+    document.getElementById('s-following').textContent = p.following||'—';
 
-    // Repos
-    const reposRes = await fetch(`https://api.github.com/users/${USERNAME}/repos?sort=updated&per_page=12`);
-    const repos = await reposRes.json();
-    const grid = document.getElementById('projects-grid');
-
-    if (!Array.isArray(repos) || repos.length === 0) {
-      grid.innerHTML = '<div class="loading-state">NO PUBLIC REPOSITORIES FOUND.</div>';
+    const grid = document.getElementById('proj-grid');
+    if(!Array.isArray(repos)||repos.length===0){
+      grid.innerHTML = '<div class="loading-card"><i class="ri-inbox-line" style="font-size:2rem;color:var(--accent)"></i><br>NO PUBLIC REPOSITORIES FOUND.</div>';
       return;
     }
-
-    grid.innerHTML = repos.map(repo => {
-      const lang = repo.language || 'Unknown';
-      const color = langColors[lang] || '#888';
-      const desc = repo.description || 'No description provided.';
-      const stars = repo.stargazers_count || 0;
-      const forks = repo.forks_count || 0;
+    grid.innerHTML = repos.map((r,i) => {
+      const lang = r.language||'Unknown';
+      const color = LC[lang]||'#888';
+      const desc = r.description||'No description provided.';
       return `
-        <div class="project-card">
-          <div class="project-lang" style="color:${color}">
-            <span style="background:${color};width:8px;height:8px;border-radius:50%;display:inline-block;"></span>
-            ${lang}
+        <div class="proj-card" data-aos="fade-up" data-aos-delay="${(i%3)*80}">
+          <div class="proj-corner"></div>
+          <div class="proj-lang">
+            <span class="lang-dot" style="background:${color}"></span>
+            <span style="color:${color}">${lang}</span>
           </div>
-          <div class="project-name">${repo.name.replace(/-/g,' ').toUpperCase()}</div>
-          <div class="project-desc">${desc.length > 120 ? desc.slice(0,120)+'...' : desc}</div>
-          <div class="project-meta">
-            <span class="project-stat">★ ${stars}</span>
-            <span class="project-stat">⑂ ${forks}</span>
-            <a href="${repo.html_url}" target="_blank" class="project-link">VIEW →</a>
+          <div class="proj-name">${r.name.replace(/-/g,' ').toUpperCase()}</div>
+          <div class="proj-desc">${desc.length>130?desc.slice(0,130)+'…':desc}</div>
+          <div class="proj-footer">
+            <span class="proj-stat"><i class="ri-star-line"></i>${r.stargazers_count||0}</span>
+            <span class="proj-stat"><i class="ri-git-branch-line"></i>${r.forks_count||0}</span>
+            <a href="${r.html_url}" target="_blank" class="proj-link">VIEW <i class="ri-arrow-right-up-line"></i></a>
           </div>
         </div>`;
     }).join('');
-
-  } catch (err) {
-    document.getElementById('projects-grid').innerHTML = '<div class="loading-state">COULD NOT LOAD GITHUB DATA.<br><small>Check your internet connection.</small></div>';
+    AOS.refresh();
+  } catch(e) {
+    document.getElementById('proj-grid').innerHTML = '<div class="loading-card"><i class="ri-error-warning-line" style="font-size:2rem;color:var(--accent)"></i><br>COULD NOT LOAD GITHUB DATA.</div>';
   }
 }
+loadGH();
 
-loadGitHub();
-
-// Hire form — Formspree
-async function submitHire(e) {
+// ── FORMSPREE ──
+async function submitHire(e){
   e.preventDefault();
   const btn = document.getElementById('hire-btn');
   const form = document.getElementById('hire-form');
-  const successMsg = document.getElementById('success-msg');
-  const errorMsg = document.getElementById('error-msg');
-
-  btn.textContent = 'SENDING...';
+  const ok = document.getElementById('ok-msg');
+  const err = document.getElementById('err-msg');
   btn.disabled = true;
-  successMsg.style.display = 'none';
-  errorMsg.style.display = 'none';
-
+  btn.innerHTML = '<i class="ri-loader-4-line"></i> SENDING...';
+  ok.style.display = 'none'; err.style.display = 'none';
   try {
     const res = await fetch('https://formspree.io/f/mbdpdprp', {
-      method: 'POST',
-      headers: { 'Accept': 'application/json' },
+      method:'POST',
+      headers:{'Accept':'application/json'},
       body: new FormData(form)
     });
-
-    if (res.ok) {
-      successMsg.style.display = 'block';
-      form.reset();
-      btn.textContent = 'SEND REQUEST ↗';
-      btn.disabled = false;
-    } else {
-      const data = await res.json();
-      throw new Error(data?.errors?.[0]?.message || 'Failed');
-    }
-  } catch (err) {
-    errorMsg.style.display = 'block';
-    btn.textContent = 'SEND REQUEST ↗';
-    btn.disabled = false;
+    if(res.ok){ ok.style.display='block'; form.reset(); }
+    else throw new Error();
+  } catch {
+    err.style.display = 'block';
   }
+  btn.disabled = false;
+  btn.innerHTML = '<i class="ri-send-plane-fill"></i> SEND REQUEST';
 }
 </script>
 </body>
