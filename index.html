@@ -729,7 +729,7 @@
         <div class="fallback-avatar" id="fallback-avatar">RS</div>
         <img id="profile-img" src="" alt="Rakesh Sharma" style="display:none; position:absolute;inset:0;">
       </div>
-      <div class="profile-corner">@rakeshsharma2007</div>
+      <div class="profile-corner">@rakeshsharma2006</div>
     </div>
     <div class="profile-info">
       <h2 id="profile-name">RAKESH SHARMA</h2>
@@ -801,10 +801,10 @@
 <section id="hire">
   <div class="section-label">Let's Work Together</div>
   <div class="section-title">HIRE ME AS<br>FREELANCER</div>
-  <div class="hire-form">
-    <input type="text" class="hire-input" id="hire-name" placeholder="Your Name *">
-    <input type="email" class="hire-input" id="hire-email" placeholder="Email Address *">
-    <select class="hire-input" id="hire-type">
+  <form class="hire-form" id="hire-form" action="https://formspree.io/f/mbdpdprp" method="POST" onsubmit="submitHire(event)">
+    <input type="text" class="hire-input" id="hire-name" name="name" placeholder="Your Name *" required>
+    <input type="email" class="hire-input" id="hire-email" name="email" placeholder="Email Address *" required>
+    <select class="hire-input" id="hire-type" name="project_type">
       <option value="">Project Type</option>
       <option>Website / Web App</option>
       <option>Mobile App</option>
@@ -815,7 +815,7 @@
       <option>Consulting</option>
       <option>Other</option>
     </select>
-    <select class="hire-input" id="hire-budget">
+    <select class="hire-input" id="hire-budget" name="budget">
       <option value="">Budget Range</option>
       <option>Under $500</option>
       <option>$500 – $1,500</option>
@@ -823,13 +823,18 @@
       <option>$5,000 – $15,000</option>
       <option>$15,000+</option>
     </select>
-    <textarea class="hire-input full" id="hire-msg" rows="5" placeholder="Tell me about your project..."></textarea>
+    <textarea class="hire-input full" id="hire-msg" name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
+    <!-- Honeypot spam filter -->
+    <input type="text" name="_gotcha" style="display:none">
     <div>
-      <button class="hire-submit" onclick="submitHire()">SEND REQUEST ↗</button>
+      <button type="submit" class="hire-submit" id="hire-btn">SEND REQUEST ↗</button>
     </div>
-  </div>
+  </form>
   <div class="success-msg" id="success-msg">
-    ✓ MESSAGE RECEIVED! I'll get back to you within 24 hours.
+    ✓ MESSAGE SENT! I'll get back to you within 24 hours.
+  </div>
+  <div class="success-msg" id="error-msg" style="border-color:rgba(255,100,100,0.6); display:none;">
+    ✗ SOMETHING WENT WRONG. Please try again or email directly.
   </div>
 </section>
 
@@ -839,7 +844,7 @@
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0 1 12 6.8c.85 0 1.71.11 2.51.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0 0 22 12c0-5.52-4.48-10-10-10z"/></svg>
     GitHub
   </a>
-  <a href="www.linkedin.com/in/rakesh-sharma-72777528a" target="_blank" class="social-link linkedin">
+  <a href="https://www.linkedin.com/in/rakesh-sharma-72777528a" target="_blank" class="social-link linkedin">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.44c.98 0 1.79-.77 1.79-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
     LinkedIn
   </a>
@@ -973,17 +978,40 @@ async function loadGitHub() {
 
 loadGitHub();
 
-// Hire form
-function submitHire() {
-  const name = document.getElementById('hire-name').value.trim();
-  const email = document.getElementById('hire-email').value.trim();
-  const msg = document.getElementById('hire-msg').value.trim();
-  if (!name || !email || !msg) {
-    alert('Please fill in name, email and message fields.');
-    return;
+// Hire form — Formspree
+async function submitHire(e) {
+  e.preventDefault();
+  const btn = document.getElementById('hire-btn');
+  const form = document.getElementById('hire-form');
+  const successMsg = document.getElementById('success-msg');
+  const errorMsg = document.getElementById('error-msg');
+
+  btn.textContent = 'SENDING...';
+  btn.disabled = true;
+  successMsg.style.display = 'none';
+  errorMsg.style.display = 'none';
+
+  try {
+    const res = await fetch('https://formspree.io/f/mbdpdprp', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: new FormData(form)
+    });
+
+    if (res.ok) {
+      successMsg.style.display = 'block';
+      form.reset();
+      btn.textContent = 'SEND REQUEST ↗';
+      btn.disabled = false;
+    } else {
+      const data = await res.json();
+      throw new Error(data?.errors?.[0]?.message || 'Failed');
+    }
+  } catch (err) {
+    errorMsg.style.display = 'block';
+    btn.textContent = 'SEND REQUEST ↗';
+    btn.disabled = false;
   }
-  document.getElementById('success-msg').style.display = 'block';
-  ['hire-name','hire-email','hire-type','hire-budget','hire-msg'].forEach(id => document.getElementById(id).value = '');
 }
 </script>
 </body>
